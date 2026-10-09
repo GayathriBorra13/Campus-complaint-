@@ -8,10 +8,12 @@ async function request(path, options = {}) {
     ...(options.headers || {}),
   };
 
+  // Set JSON content type only for non-FormData requests
   if (!(options.body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
 
+  // Add authentication token if available
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
@@ -21,69 +23,58 @@ async function request(path, options = {}) {
     headers,
   });
 
-  const data = await response
-    .json()
-    .catch(() => ({}));
+  // Read response safely
+  const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new Error(
-      data.message || "Request failed"
-    );
+    throw new Error(data.message || "Request failed");
   }
 
   return data;
 }
 
 export const api = {
-
-  /* =========================
-     AUTH
-  ========================= */
-
+  // Authentication
   register: (body) =>
-    request("/auth/register", {
+    request("/api/auth/register", {
       method: "POST",
       body: JSON.stringify(body),
     }),
 
   registerAdmin: (body) =>
-    request("/auth/register-admin", {
+    request("/api/auth/register-admin", {
       method: "POST",
       body: JSON.stringify(body),
     }),
 
   login: (body) =>
-    request("/auth/login", {
+    request("/api/auth/login", {
       method: "POST",
       body: JSON.stringify(body),
     }),
 
-  /* =========================
-     COMPLAINTS
-  ========================= */
-
+  // Complaints
   stats: () =>
-    request("/complaints/stats"),
+    request("/api/complaints/stats"),
 
   mine: () =>
-    request("/complaints/mine"),
+    request("/api/complaints/mine"),
 
   all: () =>
-    request("/complaints/all"),
+    request("/api/complaints/all"),
 
   complaint: (id) =>
-    request(`/complaints/${id}`),
+    request(`/api/complaints/${id}`),
 
   createComplaint: (body) =>
-    request("/complaints", {
+    request("/api/complaints", {
       method: "POST",
       body: JSON.stringify(body),
     }),
 
   updateStatus: (id, form) =>
-    request(`/complaints/${id}/status`, {
+    request(`/api/complaints/${id}/status`, {
       method: "PUT",
       body: form,
     }),
 };
-
