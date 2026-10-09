@@ -20,13 +20,18 @@ const complaintRoutes = require("./routes/complaintRoutes");
 
 const app = express();
 
+// CORS configuration for local and deployed frontend
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://campus-complaint-xi.vercel.app",
+    ],
     credentials: true,
   })
 );
 
+// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -36,7 +41,7 @@ app.use(
   express.static(path.join(__dirname, "uploads"))
 );
 
-// Routes
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/complaints", complaintRoutes);
 
@@ -47,14 +52,16 @@ app.get("/", (req, res) => {
   });
 });
 
+// Port configuration
 const PORT = process.env.PORT || 5000;
 
+// Connect database and start server
 const startServer = async () => {
   try {
     await connectDB();
 
     app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+      console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {
     console.error("Server startup failed:", error.message);
@@ -63,4 +70,3 @@ const startServer = async () => {
 };
 
 startServer();
-
