@@ -1,5 +1,5 @@
 
-const API = "http://localhost:5000/api";
+const API_URL = "https://campus-complaint-backend-s8rx.onrender.com";
 
 async function request(path, options = {}) {
   const token = localStorage.getItem("token");
