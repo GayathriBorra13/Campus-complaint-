@@ -16,7 +16,7 @@ async function request(path, options = {}) {
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API}${path}`, {
+  const response = await fetch(`${API_URL}${path}`, {
     ...options,
     headers,
   });
